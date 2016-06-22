@@ -3,47 +3,37 @@ var express = require('express');
 var router = express.Router();
 var Party = require('../models/party.js');
 
-var path = require('path');
 var multer  = require('multer');
-var storage = multer.diskStorage(
-	{
-	destination: './temp/',
-  	filename: function (req, file, cb) {
-	    crypto.pseudoRandomBytes(16, function (err, raw) {
-	      if (err) return cb(err)
+var upload = multer();
 
-	      cb(null, raw.toString('hex') + path.extname(file.originalname))
-	    });
-	    
-  	}
-});
-var upload = multer({ storage: storage , limits: {fileSize: 16000000 }});
- 
-var createMiddleware = upload.single('mediaFile');
+router.post('/create', upload.array() ,function(req, res, next) {
+  var party = new Party(req.body);
 
-
-//Create Party
-router.post('/create' ,function(req, res, next) {
-
-	createMiddleware(req , res, function(err){
-		//console.dir(req.file);
-		console.dir(req.body);
-		//console.dir(err);
-		res.send(req.body);
-
+	party.save(function (err){
+    if (err) {
+      res.status(400).send(err);
+		} 
+    else {
+      res.json(party);
+    }
 	});
 });
 
-router.get('/:id', function(req, res, next) {
-  res.send('Hello Juan!: ' + req.params.id );
+router.get('/', function(req, res, next) {
+  //Add Pagination
+  Party.find().limit(10).exec(function(err , data){
+
+    if(err){
+      res.status(500).send(err);
+    }else {
+      res.json(data);
+    }
+    
+  });
 });
 
 //Add Image or Video
 router.get('/:id/add', function(req, res, next) {
-  res.send('Hello Juan!');
-});
-
-router.post('/create', function(req, res, next) {
   res.send('Hello Juan!');
 });
 
