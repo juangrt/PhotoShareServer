@@ -6,6 +6,17 @@ var media = require('./routes/media');
 
 var bodyParser = require('body-parser')
 
+var mongoose = require('mongoose');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  // we're connected!
+  console.log('connection opened');
+});
+
+mongoose.connect('mongodb://localhost/test');
+
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
