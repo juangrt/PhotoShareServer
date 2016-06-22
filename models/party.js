@@ -1,21 +1,14 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
+var uniqueValidator = require('mongoose-unique-validator');
 
 var partySchema = Schema({
-	moderator: [{
-		type: Schema.Types.ObjectId,
-		ref: 'users'
-	}],
-	media: [{
-		type: Schema.Types.ObjectId,
-		ref: 'media'
-	}],
+	'title': {type: String , require: true , unique: true},
 	date: {type: Date , default: Date.now },
 	meta: {
 		private: {type: Boolean , default: false}
 	}
 });
 
-
+partySchema.plugin(uniqueValidator);
 module.exports = mongoose.model('party' , partySchema);
