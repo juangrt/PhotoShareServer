@@ -42,8 +42,6 @@ router.get('/:id/a', function(req, res, next) {
 });
 
 
-router
-
 module.exports = router;
 
 

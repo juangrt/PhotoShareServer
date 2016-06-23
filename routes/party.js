@@ -1,7 +1,7 @@
-const crypto = require('crypto');
 var express = require('express');
 var router = express.Router();
 var Party = require('../models/party.js');
+var Media = require('../models/media.js');
 
 var multer  = require('multer');
 var upload = multer();
@@ -27,17 +27,22 @@ router.get('/', function(req, res, next) {
       res.status(500).send(err);
     }else {
       res.json(data);
-    }
-    
+    } 
   });
 });
 
-//Add Image or Video
-router.get('/:id/add', function(req, res, next) {
-  res.send('Hello Juan!');
+router.post('/:slug/add', function(req, res, next){
+  Party.find(req.params.slug).exec(function(err , data){
+    if(err){
+      res.status(500).send(err);
+    }else {
+      res.json(data);
+    } 
+  });
+  //find slug
+  //attempt save
+  //respond with new media obj
 });
-
-router
 
 module.exports = router;
 
