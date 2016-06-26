@@ -27,4 +27,14 @@ partySchema.methods.sendHeaderImageFile = function (res) {
   }
 };
 
+if (!partySchema.options.toJSON) {
+  partySchema.options.toJSON = {};
+  partySchema.options.toJSON.transform = function (doc, ret, options) {
+  // remove the _id of every document before returning the result
+  delete ret.headerImage;
+  delete ret._id;
+  delete ret.__v;
+  }
+}
+
 module.exports = mongoose.model('party' , partySchema);
