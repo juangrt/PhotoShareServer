@@ -4,10 +4,11 @@ var uniqueValidator = require('mongoose-unique-validator');
 
 var partySchema = Schema({
 	'title': {type: String , require: true},
-	slug: {type: String, require:true, unique:true}, //PartyId
+	'slug': {type: String, require:true, unique:true},
 	date: {type: Date , default: Date.now },
-	meta: {
-		private: {type: Boolean , default: false}
+  'headerImage': { data: Buffer, contentType: String },
+	'meta': {
+		'private': {type: Boolean , default: false}
 	}
 });
 
