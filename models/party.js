@@ -13,4 +13,18 @@ var partySchema = Schema({
 });
 
 partySchema.plugin(uniqueValidator);
+
+partySchema.statics.findBySlug = function (slug, callback) {
+  return this.findOne({ slug: slug }, callback);
+}
+
+partySchema.methods.sendHeaderImageFile = function (res) {
+  if(this.headerImage) {
+    res.contentType(this.headerImage.contentType);
+    res.send(this.headerImage.data);
+  } else {
+    res.status(404).send(err);
+  }
+};
+
 module.exports = mongoose.model('party' , partySchema);
