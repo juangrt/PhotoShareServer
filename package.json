@@ -2,8 +2,10 @@
   "name": "photoshare",
   "version": "1.0.0",
   "description": "",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,5 +15,8 @@
     "mongoose": "^4.5.1",
     "mongoose-unique-validator": "^1.0.2",
     "multer": "^1.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.9.2"
   }
 }
