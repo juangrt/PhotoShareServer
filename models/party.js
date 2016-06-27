@@ -19,11 +19,11 @@ partySchema.statics.findBySlug = function (slug, callback) {
 }
 
 partySchema.methods.sendHeaderImageFile = function (res) {
-  if(this.headerImage) {
+  if(this.headerImage.data) {
     res.contentType(this.headerImage.contentType);
     res.send(this.headerImage.data);
   } else {
-    res.status(404).send(err);
+    res.status(404).send({error: "Not Found"});
   }
 };
 
