@@ -22,6 +22,18 @@ var storage = multer.diskStorage(
 
 var headerUpload = multer({ storage: storage , limits: {fileSize: 16000000 }});
 var middleware = headerUpload.single('headerImage');
+var mediaware = headerUpload.single('mediaFile');
+
+router.get('/', function(req, res, next) {
+  //Add Pagination
+  Party.find().limit(10).exec(function(err , data){
+    if(err){
+      res.status(500).send(err);
+    }else {
+      res.json(data);
+    } 
+  });
+});
 
 router.post('/new', function(req, res, next) {
   middleware(req , res, function(err){
@@ -44,14 +56,17 @@ router.post('/new', function(req, res, next) {
   });
 });
 
-router.get('/', function(req, res, next) {
-  //Add Pagination
-  Party.find().limit(10).exec(function(err , data){
+router.get('/:slug/feed',function(req, res, next){
+  Party.findBySlug(req.params.slug , function(err , data){
     if(err){
       res.status(500).send(err);
-    }else {
-      res.json(data);
-    } 
+    } else if (!data) {
+      res.status(404).send(err);
+    } else {
+      Party.mediaFeed(data, function(err, data){
+        res.json(data);
+      })
+    }
   });
 });
 
@@ -74,8 +89,28 @@ router.post('/:slug/add',function(req, res, next){
     } else if (!data) {
       res.status(404).send(err);
     } else {
-      var media = new Media();
-      //res.json(data);
+      mediaware(req, res, function(err){
+        var media = new Media({party: data});
+        
+        if(req.file.path){
+          media.image.data = fs.readFileSync(req.file.path);
+          media.image.contentType = req.file.mimetype;
+        }
+
+        if(req.body.comment){
+          media.comments = [req.body.comment]
+        }
+
+        media.save(function(err){
+          if(err){
+            res.status(400).send(err);
+          } else {
+            res.json(media);
+          }
+        });
+        
+      });
+      
     }
   });
 });
