@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 })); 
 
 app.use('/party', party);
-app.use('/party', media);
+app.use('/media', media);
 
 app.get('/', function (req, res) {
   res.send('Hello World!');
