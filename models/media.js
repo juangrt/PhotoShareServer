@@ -22,11 +22,21 @@ var mediaSchema = Schema({
 	}
 });
 
+mediaSchema.methods.sendImageFile = function (res) {
+  if(this.image.data) {
+    res.contentType(this.image.contentType);
+    res.send(this.image.data);
+  } else {
+    res.status(404).send({error: "Not Found"});
+  }
+};
+
 if (!mediaSchema.options.toJSON) {
   mediaSchema.options.toJSON = {};
   mediaSchema.options.toJSON.transform = function (doc, ret, options) {
   // remove the _id of every document before returning the result
   delete ret.image;
+  ret.id = ret._id;
   delete ret._id;
   delete ret.__v;
   }
