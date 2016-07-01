@@ -1,44 +1,35 @@
 var express = require('express');
 var router = express.Router();
+var Media = require('../models/media.js');
 
-var path = require('path');
-var multer  = require('multer');
-
-var storage = multer.diskStorage(
-	{
-	destination: './temp/',
-  	filename: function (req, file, cb) {
-	    crypto.pseudoRandomBytes(16, function (err, raw) {
-	      if (err) return cb(err)
-
-	      cb(null, raw.toString('hex') + path.extname(file.originalname))
-	    });
-	    
-  	}
-});
-
-var upload = multer({ storage: storage , limits: {fileSize: 16000000 }}); //16MB File Limit
-var middleware = upload.single('mediaFile');
-
-router.post('/create' ,function(req, res, next) {
-	middleware(req , res, function(err){
-		console.dir(req.body);
-		res.send(req.body);
-	});
-});
-
-
-router.post('/upload', function(req, res, next){
-	res.send(req);
-});
 
 router.get('/:id', function(req, res, next) {
-  res.send('Hello ddMedia!: ' + req.params.id );
+
+  Media.findById(req.params.id).populate('party').exec(function(err, data){
+    if(err){
+      res.status(500).send(err);
+    }else {
+      res.json(data.populate('party'));
+    } 
+  });
+
+});
+
+router.get('/:id/image', function(req, res, next) {
+  Media.findById(req.params.id , function(err , data){
+    if(err){
+      res.status(500).send(err);
+    } else if (!data) {
+      res.status(404).send(err);
+    } else {
+      data.sendImageFile(res);
+    }
+  });
 });
 
 //Add Comment
-router.get('/:id/a', function(req, res, next) {
-  res.send('Hello Juan!');
+router.get('/:id/update', function(req, res, next) {
+
 });
 
 
