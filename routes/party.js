@@ -26,7 +26,7 @@ var mediaware = headerUpload.single('mediaFile');
 
 router.get('/', function(req, res, next) {
   //Add Pagination
-  Party.find().limit(10).exec(function(err , data){
+  Party.find({}, {}, { sort: { 'date' : -1 } }).limit(10).exec(function(err , data){
     if(err){
       res.status(500).send(err);
     }else {
